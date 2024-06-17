@@ -22,32 +22,13 @@ survival.30.dataset = summary(kma_1, times = c(1, (1:33)*30))
 # convert summary to data.frame for plotting
 cols = lapply(1:15 , function(x) survival.30.dataset[x])
 df = do.call(data.frame, cols) 
-
 # clean initial data frame
 df = df[, 1:6]
-
 # table to be displayed next to the graph as a second graph
 df2 = df[1:20, c(2,6)]
 df2$surv = round(df2$surv, 4)
 
-# KM plot (ggplot2)
-p1 = ggplot(df, aes(x = time, y = surv)) +
-  geom_line(color = 'black') + 
-  geom_point(size = 1.2) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), alpha=0.2, fill= 'darkred', col = 'darkred') + 
-  labs(title = 'Kaplan-Meier analysis',
-       subtitle = 'Veteran data',
-       y="Survival rate", x="time") +
-  theme(axis.text=element_text(size=8),
-        axis.title=element_text(size=8),
-        plot.subtitle=element_text(size=9, face="italic", color="darkred"),
-        panel.background = element_rect(fill = "white", colour = "grey50"),
-        panel.grid.major = element_line(colour = "grey90"))
-
-p2 = tableGrob(df2) # to have a table with time and survival rate 
-grid.arrange(p1, p2, ncol = 2, nrow = 1, widths = c(6, 2))
-
-# or, more quickly (and with information about censoring)
+# Plot using 'autoplot()' and ggplot2 customization (and with information about censoring)
 p3 = autoplot(kma_1) +
   labs(title = 'Kaplan-Meier analysis',
        subtitle = 'Veteran data',
